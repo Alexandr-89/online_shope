@@ -2,7 +2,9 @@ package by.overone.online_store1.dao.impl;
 
 import by.overone.online_store1.dao.UserDAO;
 import by.overone.online_store1.dao.exception.DAOException;
+import by.overone.online_store1.dao.exception.DAOExistException;
 import by.overone.online_store1.dao.exception.UserDAONotFoundException;
+import by.overone.online_store1.dto.UserRegistrationDTO;
 import by.overone.online_store1.model.Role;
 import by.overone.online_store1.model.Status;
 import by.overone.online_store1.model.User;
@@ -20,6 +22,8 @@ public class UserDAOImpl implements UserDAO {
 
     private final static String GET_USERS_QUERY = "SELECT * FROM users WHERE user_status=?";
     private final static String GET_USER_BY_ID_QUERY = "SELECT * FROM users WHERE user_id=?";
+    private final static String ADD_USER_QUERY = "INSERT INTO users VALUE(0,?,?,?)";
+    private final static String ADD_USER_DETEILS_ID_QUERY = "INSERT INTO users_details(users_user_id) VALUE(?)";
 
 
     static {
@@ -85,6 +89,45 @@ public class UserDAOImpl implements UserDAO {
             }
         }catch (SQLException e){
             throw new DAOException("Not connection");
+        }
+        return user;
+    }
+
+
+    @Override
+    public UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOException, DAOExistException {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, Role.CUSTOMER.toString());
+            preparedStatement.setString(5, Status.ACTIVE.toString());
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            while (resultSet.next()) {
+                user.setId(resultSet.getLong(1));
+            }
+            preparedStatement = connection.prepareStatement(ADD_USER_DETEILS_ID_QUERY);
+            preparedStatement.setLong(1, user.getId());
+            preparedStatement.executeUpdate();
+            connection.commit();
+        }catch (SQLIntegrityConstraintViolationException ex){
+            throw new DAOExistException("Duplicate user", ex);
+        }catch (SQLException e){
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            throw new DAOException("Not connection");
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return user;
     }
