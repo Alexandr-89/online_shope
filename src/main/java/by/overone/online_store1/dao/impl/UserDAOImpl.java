@@ -72,17 +72,20 @@ public class UserDAOImpl implements UserDAO {
         }catch (SQLException e){
             throw new DAOException("Not connection");
         }finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (connection!=null){
+                try {
+                    connectionPool.returnConnection(connection);
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
             }
         }
         return users;
     }
 
     @Override
-    public User getUserById(long id) throws DAOException, UserDAONotFoundException {
+    public User getUserById(long id) throws DAOException, UserDAONotFoundException, ConnectionFullPoloException, SQLException, ConnectionException {
+        connection = connectionPool.getConnection();
         User user;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_ID_QUERY);
@@ -102,13 +105,22 @@ public class UserDAOImpl implements UserDAO {
             }
         }catch (SQLException e){
             throw new DAOException("Not connection");
+        }finally {
+            if (connection!=null){
+                try {
+                    connectionPool.returnConnection(connection);
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
         }
         return user;
     }
 
 
     @Override
-    public UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOException, DAOExistException {
+    public UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOException, DAOExistException, ConnectionFullPoloException, SQLException, ConnectionException {
+        connection = connectionPool.getConnection();
         try {
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
@@ -136,10 +148,12 @@ public class UserDAOImpl implements UserDAO {
             }
             throw new DAOException("Not connection");
         }finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (connection!=null){
+                try {
+                    connectionPool.returnConnection(connection);
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
             }
         }
         return user;

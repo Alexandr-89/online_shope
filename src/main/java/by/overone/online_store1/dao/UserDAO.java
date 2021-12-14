@@ -15,6 +15,6 @@ import java.util.List;
 public interface UserDAO {
 
     List<User> getUsersByStatus(Status status) throws DAOException, ConnectionFullPoloException, SQLException, ConnectionException;
-    User getUserById(long id) throws DAOException, UserDAONotFoundException;
-    UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOException, DAOExistException;
+    User getUserById(long id) throws DAOException, UserDAONotFoundException, ConnectionFullPoloException, SQLException, ConnectionException;
+    UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOException, DAOExistException, ConnectionFullPoloException, SQLException, ConnectionException;
 }

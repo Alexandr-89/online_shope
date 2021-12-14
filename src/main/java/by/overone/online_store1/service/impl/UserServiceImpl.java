@@ -54,6 +54,12 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Not connection");
         } catch (UserDAONotFoundException ex) {
             throw new ServiceNotFounException("User with id "+id+" not found", ex);
+        } catch (ConnectionFullPoloException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ConnectionException e) {
+            e.printStackTrace();
         }
         return userDTOs;
     }
@@ -71,6 +77,12 @@ public class UserServiceImpl implements UserService {
         } catch (DAOException e) {
             e.printStackTrace();
         } catch (DAOExistException e) {
+            e.printStackTrace();
+        } catch (ConnectionFullPoloException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ConnectionException e) {
             e.printStackTrace();
         }
 
