@@ -1,6 +1,9 @@
 package by.overone.online_store1.dao.impl;
 
 import by.overone.online_store1.dao.UserDAO;
+import by.overone.online_store1.dao.connectionPool.ConnectionPool;
+import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionException;
+import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionFullPoloException;
 import by.overone.online_store1.dao.exception.DAOException;
 import by.overone.online_store1.dao.exception.DAOExistException;
 import by.overone.online_store1.dao.exception.UserDAONotFoundException;
@@ -14,34 +17,44 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class UserDAOImpl implements UserDAO {
 
 
-    private static Connection connection;
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("database");
+    String dbUrl = resourceBundle.getString("dbUrl");
+    String dbUser = resourceBundle.getString("dbUser");
+    String dbPassword = resourceBundle.getString("dbPassword");
+
+
+     ConnectionPool connectionPool = new ConnectionPool(dbUrl, dbUser, dbPassword, 5);
+     Connection connection = null;
 
     private final static String GET_USERS_QUERY = "SELECT * FROM users WHERE user_status=?";
     private final static String GET_USER_BY_ID_QUERY = "SELECT * FROM users WHERE user_id=?";
     private final static String ADD_USER_QUERY = "INSERT INTO users VALUE(0,?,?,?)";
-    private final static String ADD_USER_DETEILS_ID_QUERY = "INSERT INTO users_details(users_user_id) VALUE(?)";
+    private final static String ADD_USER_DETAILS_ID_QUERY = "INSERT INTO users_details(users_user_id) VALUE(?)";
 
 
-    static {
-        try {
-            String url = "jdbc:mysql://localhost:3306/online_store";
-            String dbUser = "root";
-            String password = "root";
-            connection = DriverManager.getConnection(url, dbUser, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    static {
+//        try {
+//            String url = "ADD_USER_DETAILS_ID_QUERY";
+//            String dbUser = "root";
+//            String password = "root";
+//            connection = DriverManager.getConnection(url, dbUser, password);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     @Override
-    public List<User> getUsersByStatus(Status status) throws DAOException {
+    public List<User> getUsersByStatus(Status status) throws DAOException, ConnectionFullPoloException, SQLException, ConnectionException {
         List<User> users;
+        connection = connectionPool.getConnection();
         try {
+
             PreparedStatement preparedStatement = connection.prepareStatement(GET_USERS_QUERY);
             preparedStatement.setString(1,status.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -109,7 +122,7 @@ public class UserDAOImpl implements UserDAO {
             while (resultSet.next()) {
                 user.setId(resultSet.getLong(1));
             }
-            preparedStatement = connection.prepareStatement(ADD_USER_DETEILS_ID_QUERY);
+            preparedStatement = connection.prepareStatement(ADD_USER_DETAILS_ID_QUERY);
             preparedStatement.setLong(1, user.getId());
             preparedStatement.executeUpdate();
             connection.commit();
