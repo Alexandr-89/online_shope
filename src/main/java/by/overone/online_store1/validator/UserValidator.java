@@ -23,7 +23,7 @@ public class UserValidator {
         }
     }
 
-    private static boolean validateUserDateils(UserDateilsDTO user) throws ValidatorException {
+    public static boolean validateUserDateils(UserDateilsDTO user) throws ValidatorException {
         if (validateName(user.getName()) && validateName(user.getSurname()) && validateAddress(user.getAddress()) && validetePhone(user.getPhone())) {
             return validateName(user.getName()) && validateName(user.getSurname()) && validateAddress(user.getAddress()) && validetePhone(user.getPhone());
         }else {

@@ -8,6 +8,7 @@ import by.overone.online_store1.dao.exception.DAOExistException;
 import by.overone.online_store1.dao.exception.UserDAONotFoundException;
 import by.overone.online_store1.dao.impl.UserDAOImpl;
 import by.overone.online_store1.dto.UserDTO;
+import by.overone.online_store1.dto.UserDateilsDTO;
 import by.overone.online_store1.dto.UserRegistrationDTO;
 import by.overone.online_store1.model.Status;
 import by.overone.online_store1.model.User;
@@ -54,11 +55,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Not connection");
         } catch (UserDAONotFoundException ex) {
             throw new ServiceNotFounException("User with id "+id+" not found", ex);
-        } catch (ConnectionFullPoloException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ConnectionException e) {
+        } catch (ConnectionFullPoloException | ConnectionException e) {
             e.printStackTrace();
         }
         return userDTOs;
@@ -74,19 +71,19 @@ public class UserServiceImpl implements UserService {
         }
         try {
             userDAO.addUser(userRegistrationDTO);
-        } catch (DAOException e) {
-            e.printStackTrace();
-        } catch (DAOExistException e) {
-            e.printStackTrace();
-        } catch (ConnectionFullPoloException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ConnectionException e) {
+        } catch (DAOException | DAOExistException | ConnectionFullPoloException | ConnectionException e) {
             e.printStackTrace();
         }
-
-
         return true;
+    }
+
+    @Override
+    public void addUserDetails(UserRegistrationDTO userRegistrationDTO, UserDateilsDTO userDateilsDTO) {
+        try {
+            UserValidator.validateUserDateils(userDateilsDTO);
+            userDAO.addUsetrDetails(userRegistrationDTO, userDateilsDTO);
+        } catch (ValidatorException | ConnectionFullPoloException | SQLException | DAOException | ConnectionException e) {
+            e.printStackTrace();
+        }
     }
 }

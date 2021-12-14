@@ -5,6 +5,7 @@ import by.overone.online_store1.dao.connectionPool.connectionException.Connectio
 import by.overone.online_store1.dao.exception.DAOException;
 import by.overone.online_store1.dao.exception.DAOExistException;
 import by.overone.online_store1.dao.exception.UserDAONotFoundException;
+import by.overone.online_store1.dto.UserDateilsDTO;
 import by.overone.online_store1.dto.UserRegistrationDTO;
 import by.overone.online_store1.model.Status;
 import by.overone.online_store1.model.User;
@@ -14,7 +15,8 @@ import java.util.List;
 
 public interface UserDAO {
 
-    List<User> getUsersByStatus(Status status) throws DAOException, ConnectionFullPoloException, SQLException, ConnectionException;
-    User getUserById(long id) throws DAOException, UserDAONotFoundException, ConnectionFullPoloException, SQLException, ConnectionException;
-    UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOException, DAOExistException, ConnectionFullPoloException, SQLException, ConnectionException;
+    List<User> getUsersByStatus(Status status) throws DAOException, ConnectionFullPoloException, ConnectionException;
+    User getUserById(long id) throws DAOException, UserDAONotFoundException, ConnectionFullPoloException, ConnectionException;
+    UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOException, DAOExistException, ConnectionFullPoloException, ConnectionException;
+    UserDateilsDTO addUsetrDetails(UserRegistrationDTO userRegistrationDTO, UserDateilsDTO userDateilsDTO) throws ConnectionFullPoloException, SQLException, ConnectionException, DAOException;
 }

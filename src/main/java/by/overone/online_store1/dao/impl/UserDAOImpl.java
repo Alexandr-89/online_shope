@@ -7,6 +7,7 @@ import by.overone.online_store1.dao.connectionPool.connectionException.Connectio
 import by.overone.online_store1.dao.exception.DAOException;
 import by.overone.online_store1.dao.exception.DAOExistException;
 import by.overone.online_store1.dao.exception.UserDAONotFoundException;
+import by.overone.online_store1.dto.UserDateilsDTO;
 import by.overone.online_store1.dto.UserRegistrationDTO;
 import by.overone.online_store1.model.Role;
 import by.overone.online_store1.model.Status;
@@ -34,7 +35,8 @@ public class UserDAOImpl implements UserDAO {
     private final static String GET_USERS_QUERY = "SELECT * FROM users WHERE user_status=?";
     private final static String GET_USER_BY_ID_QUERY = "SELECT * FROM users WHERE user_id=?";
     private final static String ADD_USER_QUERY = "INSERT INTO users VALUE(0,?,?,?)";
-    private final static String ADD_USER_DETAILS_ID_QUERY = "INSERT INTO users_details(users_user_id) VALUE(?)";
+    private final static String ADD_USER_DETAILS_ID_QUERY = "INSERT INTO user_details(users_user_id) VALUE(?)";
+    private final static String ADD_USER_DETAILS_QUERY = "INSERT INTO users_details(users_details_name, users_details_surname, users_details_address, users_details_phone) VALUE(?,?,?,?)WHERE users_user_id=?";
 
 
 //    static {
@@ -50,11 +52,11 @@ public class UserDAOImpl implements UserDAO {
 
 
     @Override
-    public List<User> getUsersByStatus(Status status) throws DAOException, ConnectionFullPoloException, SQLException, ConnectionException {
+    public List<User> getUsersByStatus(Status status) throws DAOException, ConnectionFullPoloException, ConnectionException {
         List<User> users;
-        connection = connectionPool.getConnection();
-        try {
 
+        try {
+            connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(GET_USERS_QUERY);
             preparedStatement.setString(1,status.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -84,16 +86,16 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserById(long id) throws DAOException, UserDAONotFoundException, ConnectionFullPoloException, SQLException, ConnectionException {
-        connection = connectionPool.getConnection();
+    public User getUserById(long id) throws DAOException, UserDAONotFoundException, ConnectionFullPoloException, ConnectionException {
         User user;
         try {
+            connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.next()){
-                throw new UserDAONotFoundException("User with id "+id+" not found");
-            }
+//            if (!resultSet.next()){
+//                throw new UserDAONotFoundException("User with id "+id+" not found");
+//            }
             user = new User();
             while (resultSet.next()){
                 user.setId(resultSet.getLong(Constant.ID));
@@ -119,16 +121,17 @@ public class UserDAOImpl implements UserDAO {
 
 
     @Override
-    public UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOException, DAOExistException, ConnectionFullPoloException, SQLException, ConnectionException {
-        connection = connectionPool.getConnection();
+    public UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOException, DAOExistException, ConnectionFullPoloException, ConnectionException {
+
         try {
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, Role.CUSTOMER.toString());
-            preparedStatement.setString(5, Status.ACTIVE.toString());
+//            preparedStatement.setString(4, Role.CUSTOMER.toString());
+//            preparedStatement.setString(5, Status.ACTIVE.toString());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {
@@ -158,4 +161,31 @@ public class UserDAOImpl implements UserDAO {
         }
         return user;
     }
+
+    @Override
+    public UserDateilsDTO addUsetrDetails(UserRegistrationDTO userRegistrationDTO, UserDateilsDTO userDateilsDTO) throws ConnectionFullPoloException, ConnectionException, DAOException {
+        try {
+            connection = connectionPool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER_DETAILS_QUERY);
+            preparedStatement.setString(1, userDateilsDTO.getName());
+            preparedStatement.setString(2, userDateilsDTO.getSurname());
+            preparedStatement.setString(3, userDateilsDTO.getAddress());
+            preparedStatement.setString(4, userDateilsDTO.getPhone());
+            preparedStatement.setLong(5, userRegistrationDTO.getId());
+            preparedStatement.executeUpdate();
+        }catch (SQLException e){
+            throw new DAOException("not connection");
+        }finally {
+            if (connection!=null){
+                try {
+                    connectionPool.returnConnection(connection);
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+
 }
