@@ -39,7 +39,7 @@ public class ConnectionPool {
         }
         connection = getConnectionFromPool();
         if (connection == null) {
-            connection = cresteNewConnectionForPool();
+            connection = createNewConnectionForPool();
         }
         connection = makeAvailable(connection);
         return connection;
@@ -61,13 +61,6 @@ public class ConnectionPool {
         return ((freePool.size() == 0) && (connNum >= maxPoolSize));
     }
 
-
-    private Connection cresteNewConnectionForPool() throws ConnectionException {
-        Connection connection =createNewConnection();
-        connNum++;
-        occupiedPool.add(connection);
-        return connection;
-    }
 
 
 
