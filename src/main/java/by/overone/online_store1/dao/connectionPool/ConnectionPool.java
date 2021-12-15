@@ -1,7 +1,7 @@
 package by.overone.online_store1.dao.connectionPool;
 
 import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionException;
-import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionFullPoloException;
+import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionFullPoolException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -32,10 +32,10 @@ public class ConnectionPool {
         this.maxPoolSize = maxPoolSize;
     }
 
-    public synchronized Connection getConnection() throws ConnectionFullPoloException, SQLException, ConnectionException {
+    public synchronized Connection getConnection() throws ConnectionFullPoolException, SQLException, ConnectionException {
         Connection connection = null;
         if (isFull()) {
-            throw new ConnectionFullPoloException("The connection pool is full.");
+            throw new ConnectionFullPoolException("The connection pool is full.");
         }
         connection = getConnectionFromPool();
         if (connection == null) {

@@ -2,11 +2,12 @@ package by.overone.online_store1.service.impl;
 
 import by.overone.online_store1.dao.UserDAO;
 import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionException;
-import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionFullPoloException;
+import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionFullPoolException;
 import by.overone.online_store1.dao.exception.DAOException;
 import by.overone.online_store1.dao.exception.DAOExistException;
 import by.overone.online_store1.dao.exception.UserDAONotFoundException;
 import by.overone.online_store1.dao.impl.UserDAOImpl;
+import by.overone.online_store1.dto.UserAllInfoDTO;
 import by.overone.online_store1.dto.UserDTO;
 import by.overone.online_store1.dto.UserDateilsDTO;
 import by.overone.online_store1.dto.UserRegistrationDTO;
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
     public UserDAO userDAO = new UserDAOImpl();
 
     @Override
-    public List<UserDTO> getAllActiveUsers() throws ServiceException, ConnectionFullPoloException, SQLException, ConnectionException {
+    public List<UserDTO> getAllActiveUsers() throws ServiceException, ConnectionFullPoolException, SQLException, ConnectionException {
         List<UserDTO> userDTOs;
         try {
             List<User> users = userDAO.getUsersByStatus(Status.ACTIVE);
@@ -55,7 +56,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Not connection");
         } catch (UserDAONotFoundException ex) {
             throw new ServiceNotFounException("User with id "+id+" not found", ex);
-        } catch (ConnectionFullPoloException | ConnectionException e) {
+        } catch (ConnectionFullPoolException | ConnectionException e) {
             e.printStackTrace();
         }
         return userDTOs;
@@ -71,19 +72,41 @@ public class UserServiceImpl implements UserService {
         }
         try {
             userDAO.addUser(userRegistrationDTO);
-        } catch (DAOException | DAOExistException | ConnectionFullPoloException | ConnectionException e) {
+        } catch (DAOException | DAOExistException | ConnectionFullPoolException | ConnectionException e) {
             e.printStackTrace();
         }
         return true;
     }
 
     @Override
-    public void addUserDetails(UserRegistrationDTO userRegistrationDTO, UserDateilsDTO userDateilsDTO) {
+    public void addUserDetails(long id, UserDateilsDTO userDateilsDTO) throws ServiceException, ServiceNotFounException {
+        getUserById(id);
         try {
             UserValidator.validateUserDateils(userDateilsDTO);
-            userDAO.addUsetrDetails(userRegistrationDTO, userDateilsDTO);
-        } catch (ValidatorException | ConnectionFullPoloException | SQLException | DAOException | ConnectionException e) {
+            userDAO.addUserDetails(id, userDateilsDTO);
+        } catch (ValidatorException | ConnectionFullPoolException | SQLException | DAOException | ConnectionException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void deleteUser(long id) throws ServiceException, ServiceNotFounException {
+        getUserById(id);
+        try {
+            userDAO.deleteUser(id);
+        } catch (UserDAONotFoundException e) {
+            throw new ServiceException("error");
+        }
+    }
+
+    @Override
+    public UserAllInfoDTO getUserAllInfo(long id) throws ServiceException {
+        UserAllInfoDTO userAllInfoDTO;
+            try {
+                userAllInfoDTO = userDAO.getUserAllInfo(id);
+            } catch (DAOException e) {
+                throw new ServiceException("service error");
+            }
+        return userAllInfoDTO;
     }
 }

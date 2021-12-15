@@ -1,8 +1,8 @@
 package by.overone.online_store1.validator;
 
+import by.overone.online_store1.dto.UserAllInfoDTO;
 import by.overone.online_store1.dto.UserDateilsDTO;
 import by.overone.online_store1.dto.UserRegistrationDTO;
-import by.overone.online_store1.model.User;
 import by.overone.online_store1.validator.exception.ValidatorException;
 
 public class UserValidator {
@@ -12,7 +12,7 @@ public class UserValidator {
     private final static String PASSWORD_REGEX = "^[\\w]{8,16}$";
     private final static String PHONE_REGEX = "^(\\+375|80)(17|29|33|44)(\\d){7}$";
     private final static String NAME_REGEX = "^[a-zA-Z]{2,30}$";
-    private final static String ADDRESS_REGEX = "^[\\.]{5,50}$";
+    private final static String ADDRESS_REGEX = "^[\\w]{5,50}$";
 
 
     public static boolean validateUserRegistrationDTO(UserRegistrationDTO user) throws ValidatorException {
@@ -24,8 +24,23 @@ public class UserValidator {
     }
 
     public static boolean validateUserDateils(UserDateilsDTO user) throws ValidatorException {
-        if (validateName(user.getName()) && validateName(user.getSurname()) && validateAddress(user.getAddress()) && validetePhone(user.getPhone())) {
-            return validateName(user.getName()) && validateName(user.getSurname()) && validateAddress(user.getAddress()) && validetePhone(user.getPhone());
+        if (validateName(user.getName()) && validateName(user.getSurname())
+                && validateAddress(user.getAddress()) && validetePhone(user.getPhone())) {
+            return validateName(user.getName()) && validateName(user.getSurname()) && validateAddress(user.getAddress())
+                    && validetePhone(user.getPhone());
+        }else {
+            throw new ValidatorException("incorrect data");
+        }
+    }
+
+
+    public static boolean validateUserAllDateils(UserAllInfoDTO user) throws ValidatorException {
+        if (validateLogin(user.getLogin()) && validateEmail(user.getEmail()) && validatePassword(user.getPassword())
+                && validateName(user.getName()) && validateName(user.getSurname()) && validateAddress(user.getAddress())
+                && validetePhone(user.getPhone())){
+            return validateLogin(user.getLogin()) && validateEmail(user.getEmail()) && validatePassword(user.getPassword())
+                    && validateName(user.getName()) && validateName(user.getSurname()) && validateAddress(user.getAddress())
+                    && validetePhone(user.getPhone());
         }else {
             throw new ValidatorException("incorrect data");
         }
