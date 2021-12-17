@@ -13,7 +13,7 @@ import by.overone.online_store1.dto.UserRegistrationDTO;
 import by.overone.online_store1.model.Role;
 import by.overone.online_store1.model.Status;
 import by.overone.online_store1.model.User;
-import by.overone.online_store1.util.constant.Constant;
+import by.overone.online_store1.util.constant.ConstantUser;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -57,7 +57,6 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public List<User> getUsersByStatus(Status status) throws DAOException, ConnectionFullPoolException, ConnectionException {
         List<User> users;
-
         try {
             connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(GET_USERS_QUERY);
@@ -66,12 +65,12 @@ public class UserDAOImpl implements UserDAO {
             users = new ArrayList<>();
             while (resultSet.next()){
                 User user = new User();
-                user.setId(resultSet.getLong(Constant.ID));
-                user.setLogin(resultSet.getString(Constant.LOGIN));
-                user.setPassword(resultSet.getString(Constant.PASSWORD));
-                user.setEmail(resultSet.getString(Constant.EMAIL));
-                user.setRole(Role.valueOf(resultSet.getString(Constant.ROLE).toUpperCase(Locale.ROOT)));
-                user.setStatus(Status.valueOf(resultSet.getString(Constant.STATUS).toUpperCase(Locale.ROOT)));
+                user.setId(resultSet.getLong(ConstantUser.ID));
+                user.setLogin(resultSet.getString(ConstantUser.LOGIN));
+                user.setPassword(resultSet.getString(ConstantUser.PASSWORD));
+                user.setEmail(resultSet.getString(ConstantUser.EMAIL));
+                user.setRole(Role.valueOf(resultSet.getString(ConstantUser.ROLE).toUpperCase(Locale.ROOT)));
+                user.setStatus(Status.valueOf(resultSet.getString(ConstantUser.STATUS).toUpperCase(Locale.ROOT)));
                 users.add(user);
             }
         }catch (SQLException e){
@@ -98,12 +97,12 @@ public class UserDAOImpl implements UserDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             user = new User();
             if (resultSet.next()){
-                user.setId(resultSet.getLong(Constant.ID));
-                user.setLogin(resultSet.getString(Constant.LOGIN));
-                user.setPassword(resultSet.getString(Constant.PASSWORD));
-                user.setEmail(resultSet.getString(Constant.EMAIL));
-                user.setRole(Role.valueOf(resultSet.getString(Constant.ROLE).toUpperCase(Locale.ROOT)));
-                user.setStatus(Status.valueOf(resultSet.getString(Constant.STATUS).toUpperCase(Locale.ROOT)));
+                user.setId(resultSet.getLong(ConstantUser.ID));
+                user.setLogin(resultSet.getString(ConstantUser.LOGIN));
+                user.setPassword(resultSet.getString(ConstantUser.PASSWORD));
+                user.setEmail(resultSet.getString(ConstantUser.EMAIL));
+                user.setRole(Role.valueOf(resultSet.getString(ConstantUser.ROLE).toUpperCase(Locale.ROOT)));
+                user.setStatus(Status.valueOf(resultSet.getString(ConstantUser.STATUS).toUpperCase(Locale.ROOT)));
             }else {
                 throw new UserDAONotFoundException("net usera");
             }
@@ -226,15 +225,15 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                userAllInfoDTO.setLogin(resultSet.getString(Constant.LOGIN));
-                userAllInfoDTO.setPassword(resultSet.getString(Constant.PASSWORD));
-                userAllInfoDTO.setEmail(resultSet.getString(Constant.EMAIL));
-                userAllInfoDTO.setRole(Role.valueOf(resultSet.getString(Constant.ROLE).toUpperCase(Locale.ROOT)));
-                userAllInfoDTO.setStatus(Status.valueOf(resultSet.getString(Constant.STATUS).toUpperCase(Locale.ROOT)));
-                userAllInfoDTO.setName(resultSet.getString(Constant.NAME));
-                userAllInfoDTO.setSurname(resultSet.getString(Constant.SURNAME));
-                userAllInfoDTO.setAddress(resultSet.getString(Constant.ADDRESS));
-                userAllInfoDTO.setPhone(resultSet.getString(Constant.PHONE));
+                userAllInfoDTO.setLogin(resultSet.getString(ConstantUser.LOGIN));
+                userAllInfoDTO.setPassword(resultSet.getString(ConstantUser.PASSWORD));
+                userAllInfoDTO.setEmail(resultSet.getString(ConstantUser.EMAIL));
+                userAllInfoDTO.setRole(Role.valueOf(resultSet.getString(ConstantUser.ROLE).toUpperCase(Locale.ROOT)));
+                userAllInfoDTO.setStatus(Status.valueOf(resultSet.getString(ConstantUser.STATUS).toUpperCase(Locale.ROOT)));
+                userAllInfoDTO.setName(resultSet.getString(ConstantUser.NAME));
+                userAllInfoDTO.setSurname(resultSet.getString(ConstantUser.SURNAME));
+                userAllInfoDTO.setAddress(resultSet.getString(ConstantUser.ADDRESS));
+                userAllInfoDTO.setPhone(resultSet.getString(ConstantUser.PHONE));
             }else {
                 throw new DAOException(" error");
             }

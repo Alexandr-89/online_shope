@@ -1,17 +1,14 @@
 package by.overone.online_store1;
 
-import by.overone.online_store1.dao.UserDAO;
 import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionException;
 import by.overone.online_store1.dao.connectionPool.connectionException.ConnectionFullPoolException;
-import by.overone.online_store1.dto.UserAllInfoDTO;
-import by.overone.online_store1.dto.UserDTO;
-import by.overone.online_store1.dto.UserDateilsDTO;
-import by.overone.online_store1.dto.UserRegistrationDTO;
-import by.overone.online_store1.model.Role;
+import by.overone.online_store1.dto.*;
 import by.overone.online_store1.model.Status;
+import by.overone.online_store1.service.ProductService;
 import by.overone.online_store1.service.UserService;
 import by.overone.online_store1.service.exception.ServiceException;
 import by.overone.online_store1.service.exception.ServiceNotFounException;
+import by.overone.online_store1.service.impl.ProductServiceImpl;
 import by.overone.online_store1.service.impl.UserServiceImpl;
 
 import java.sql.SQLException;
@@ -21,10 +18,10 @@ public class Main {
     public static void main(String[] args) throws ServiceException, ServiceNotFounException, ConnectionFullPoolException, SQLException, ConnectionException {
 
         UserService userService = new UserServiceImpl();
+        ProductService productService = new ProductServiceImpl();
 
-
-        List<UserDTO> userDTOs = userService.getAllActiveUsers();
-        userDTOs.stream().forEach(System.out::println);
+//        List<UserDTO> userDTOs = userService.getAllActiveUsers();
+//        userDTOs.stream().forEach(System.out::println);
 
 //        UserDTO userDTOs = userService.getUserById(2);
 //        System.out.println(userDTOs);
@@ -49,7 +46,21 @@ public class Main {
 //        UserAllInfoDTO userAllInfoDTO = userService.getUserAllInfo(2);
 //        System.out.println(userAllInfoDTO);
 
+//        AddProductDTO addProductDTO = new AddProductDTO();
+//        addProductDTO.setName("tablet");
+//        addProductDTO.setDescription("jgkhkh jgkt gjgj gjtky");
+//        addProductDTO.setPrice(1100);
+//        addProductDTO.setCount(14);
+//        addProductDTO.setStatus(Status.ACTIVE);
+//        productService.addProduct(addProductDTO);
 
+
+//        ProductDTO productDTO = productService.getProductById(2);
+//        System.out.println(productDTO);
+
+
+        List<ProductAllDTO> productDTOS = productService.getAllActiveProducts();
+        productDTOS.stream().forEach(System.out::println);
 
     }
 }

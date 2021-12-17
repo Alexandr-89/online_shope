@@ -1,6 +1,6 @@
 package by.overone.online_store1.util.constant;
 
-public class Constant {
+public class ConstantUser {
 
     public static final String ID = "user_id";
     public static final String LOGIN = "user_login";
