@@ -47,10 +47,10 @@ public class Main {
 //        System.out.println(userAllInfoDTO);
 
 //        AddProductDTO addProductDTO = new AddProductDTO();
-//        addProductDTO.setName("tablet");
+//        addProductDTO.setName("laptop");
 //        addProductDTO.setDescription("jgkhkh jgkt gjgj gjtky");
-//        addProductDTO.setPrice(1100);
-//        addProductDTO.setCount(14);
+//        addProductDTO.setPrice(1600);
+//        addProductDTO.setCount(4);
 //        addProductDTO.setStatus(Status.ACTIVE);
 //        productService.addProduct(addProductDTO);
 

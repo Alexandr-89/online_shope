@@ -55,8 +55,8 @@ public class ProductServiceImpl implements ProductService {
         try {
             List<Product> products = productDAO.getProductsByStatus(Status.ACTIVE);
             productDTOs = products.stream()
-                    .map(product -> new ProductAllDTO(product.getId(), product.getName(),
-                            product.getPrice(), product.getCount(), product.getStatus()))
+                    .map(product -> new ProductAllDTO( product.getName(),
+                            product.getPrice(), product.getCount()))
                     .collect(Collectors.toList());
 
         }catch (DAOException e){

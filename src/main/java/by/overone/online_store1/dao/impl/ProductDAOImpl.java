@@ -36,9 +36,10 @@ public class ProductDAOImpl implements ProductDAO {
 
 
     private final static String ADD_PRODUCT_QUERY = "INSERT INTO products VALUE(0,?,?,?,?,?)";
-    private final static String SELECT_COUNT = "SELECT product_count FROM products WHERE product_id=?";
+    private final static String SELECT_COUNT = "SELECT product_count FROM products WHERE product_name=?";
     private final static String GET_PRODUCT_BY_ID_QUERY = "SELECT * FROM products WHERE product_id=?";
-    private final static String GET_PRODUCT_BY_STATUS_QUERY = "SELECT * FROM products WHERE product_status=?";
+    private final static String GET_PRODUCT_BY_STATUS_QUERY = "SELECT product_name, product_price," +
+            " sum(product_count) FROM products WHERE product_status=? GROUP BY product_name";
 
 
     @Override
@@ -121,12 +122,12 @@ public class ProductDAOImpl implements ProductDAO {
             products = new ArrayList<>();
             while (resultSet.next()){
                 Product product = new Product();
-                product.setId(resultSet.getLong(ConstantProduct.ID));
+//                product.setId(resultSet.getLong(ConstantProduct.ID));
                 product.setName(resultSet.getString(ConstantProduct.NAME));
-                product.setDiscription(resultSet.getString(ConstantProduct.DESCRIPTION));
+//                product.setDiscription(resultSet.getString(ConstantProduct.DESCRIPTION));
                 product.setPrice(resultSet.getLong(ConstantProduct.PRICE));
-                product.setCount(resultSet.getLong(ConstantProduct.COUNT));
-                product.setStatus(Status.valueOf(resultSet.getString(ConstantProduct.STATUS).toUpperCase(Locale.ROOT)));
+                product.setCount(resultSet.getLong(ConstantProduct.COUNT1));
+//                product.setStatus(Status.valueOf(resultSet.getString(ConstantProduct.STATUS).toUpperCase(Locale.ROOT)));
                 products.add(product);
             }
         }catch (SQLException e){

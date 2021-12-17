@@ -8,5 +8,6 @@ public class ConstantProduct {
     public static final String PRICE = "product_price";
     public static final String STATUS = "product_status";
     public static final String COUNT = "product_count";
+    public static final String COUNT1 = "sum(product_count)";
 
 }
