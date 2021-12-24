@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 //@Data
-//@AllArgsConstructor
+@AllArgsConstructor
 //@NoArgsConstructor
 @RequiredArgsConstructor
 public class UserDTO {
@@ -19,6 +19,9 @@ public class UserDTO {
     private String email;
     private Role role;
     private Status status;
+
+//    public UserDTO(long id, String login, String email, Role role, Status status) {
+//    }
 
 //    public UserDTO(long id, String login, String email, Role role, Status status) {
 //        this.id = id;

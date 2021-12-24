@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,7 +18,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> getAllUsers() {
-        List<UserDTO> userDTOs = userDAO.getAllUsers().stream().map(user -> new UserDTO());
+        List<UserDTO> userDTOs = userDAO.getAllUsers().stream()
+                .map(user -> new UserDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole(), user.getStatus()))
+                .collect(Collectors.toList());
         return null;
     }
 }
